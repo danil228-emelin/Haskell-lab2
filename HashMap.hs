@@ -80,3 +80,9 @@ instance (Hashable k, Eq v) => Dictionary HashMap k v where
   getAllKeys (HashMap buckets s) = concat [map fst x | x <- elems buckets]
   getAllValues Nil = []
   getAllValues (HashMap buckets s) = concat [map snd x | x <- elems buckets]
+
+  (++) Nil hashMap = hashMap
+  (++) hashMap Nil = hashMap
+  (++) hashMap hashMap2 =
+    let commonElems = [(k, v) | xs <- elems (buckets hashMap), (k, v) <- xs, isKeyExist k hashMap2]
+     in createMap (size hashMap) commonElems
