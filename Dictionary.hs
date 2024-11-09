@@ -12,3 +12,5 @@ class (Eq k, Eq v) => Dictionary hm k v where
   createMap :: Int -> [(k, v)] -> hm k v -- Create map from list of pairs
   isKeyExist :: k -> hm k v -> Bool -- Check that key is inside map
   isValueExist :: k -> v -> hm k v -> Bool -- Check that value is inside map
+  mapD :: ((k, v) -> (k, v)) -> hm k v -> hm k v -- Maps a function to all values in a dictionary
+  filterDK :: ((k, v) -> Bool) -> hm k v -> hm k v -- Filter over dictionary

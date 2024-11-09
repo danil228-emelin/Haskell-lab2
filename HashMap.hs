@@ -64,3 +64,13 @@ instance (Hashable k, Eq v) => Dictionary HashMap k v where
     let index = bucketIndex hashMap key
         bucket = buckets hashMap ! index
      in customFoldl (\(k, v) acc -> acc || value == v) False bucket
+
+  mapD _ Nil = Nil
+  mapD f (HashMap buckets s) =
+    let newBuckets = [customMap f x | x <- elems buckets]
+     in HashMap (array (0, s) [(i, newBuckets !! i) | i <- [0 .. s]]) s
+
+  filterDK _ Nil = Nil
+  filterDK f (HashMap buckets s) =
+    let newBuckets = [filter f x | x <- elems buckets]
+     in HashMap (array (0, s) [(i, newBuckets !! i) | i <- [0 .. s]]) s
