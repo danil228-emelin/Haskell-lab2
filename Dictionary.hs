@@ -3,7 +3,7 @@
 module Dictionary where
 
 -- Define the Dictionary class (interface) with a class constraint on keys
-class (Eq k) => Dictionary hm k v where
+class (Eq k, Eq v) => Dictionary hm k v where
   empty :: Int -> hm k v -- Create An empty hash map
   insert :: k -> v -> hm k v -> hm k v -- Insert a key-value pair
   lookup :: k -> hm k v -> Maybe v -- Lookup a value by key
