@@ -16,7 +16,7 @@ bucketIndex :: (Hashable k) => HashMap k v -> k -> Int
 bucketIndex hashmap key = hash key `mod` size hashmap
 
 lookupHelper :: (Eq k) => k -> [(k, v)] -> Maybe v
-lookupHelper key = foldr (\(k, v) acc -> if k == key then Just v else acc) Nothing
+lookupHelper key = customFoldr (\(k, v) acc -> if k == key then Just v else acc) Nothing
 
 instance (Hashable k) => Dictionary HashMap k v  where
     empty s | s >= 0 =HashMap (array (0, s) [(i, []) | i <- [0..s]]) s
@@ -39,4 +39,6 @@ instance (Hashable k) => Dictionary HashMap k v  where
             oldBucket = buckets hashmap ! index
             newBucket = filter (\(k, _) -> k /= key) oldBucket
             newBuckets = buckets hashmap // [(index, newBucket)]
-        in hashmap { buckets = newBuckets }        
+        in hashmap { buckets = newBuckets }
+
+    len hashmap = size hashmap
