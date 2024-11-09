@@ -74,3 +74,9 @@ instance (Hashable k, Eq v) => Dictionary HashMap k v where
   filterDK f (HashMap buckets s) =
     let newBuckets = [filter f x | x <- elems buckets]
      in HashMap (array (0, s) [(i, newBuckets !! i) | i <- [0 .. s]]) s
+  isEmpty Nil = True
+  isEmpty (HashMap buckets s) = customFoldr (\x y -> null x && y) True (elems buckets)
+  getAllKeys Nil = []
+  getAllKeys (HashMap buckets s) = concat [map fst x | x <- elems buckets]
+  getAllValues Nil = []
+  getAllValues (HashMap buckets s) = concat [map snd x | x <- elems buckets]
