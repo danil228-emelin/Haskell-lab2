@@ -25,7 +25,7 @@ instance (Hashable k) => Dictionary HashMap k v  where
     insert key value hashmap =
         let index = bucketIndex hashmap key
             oldBucket = buckets hashmap ! index
-            newBucket = (key, value) : filter (\(k, _) -> k /= key) oldBucket
+            newBucket = (key, value) : customFilter (\(k, _) -> k /= key) oldBucket
             newBuckets = buckets hashmap // [(index, newBucket)]
         in hashmap { buckets = newBuckets }       
 
@@ -37,8 +37,13 @@ instance (Hashable k) => Dictionary HashMap k v  where
     delete key hashmap =
         let index = bucketIndex hashmap key
             oldBucket = buckets hashmap ! index
-            newBucket = filter (\(k, _) -> k /= key) oldBucket
+            newBucket = customFilter (\(k, _) -> k /= key) oldBucket
             newBuckets = buckets hashmap // [(index, newBucket)]
         in hashmap { buckets = newBuckets }
 
     len hashmap = size hashmap
+
+    createMap s [] = empty s
+    createMap s xs = 
+        let hashTable = empty s
+        in customFoldl (\(k,v) acc -> insert k v acc) hashTable xs

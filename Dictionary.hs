@@ -6,4 +6,5 @@ class (Eq k) => Dictionary hm k v where
     insert :: k -> v -> hm k v  -> hm k v   -- Insert a key-value pair
     lookup :: k -> hm k v  -> Maybe v -- Lookup a value by key
     delete :: k -> hm k v  -> hm k v   -- Delete a key-value pair
-    len :: hm k v -> Int
+    len :: hm k v -> Int -- return the amount of buckets
+    createMap :: Int -> [(k,v)] ->hm k v -- create map from list of pairs
