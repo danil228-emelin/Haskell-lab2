@@ -1,4 +1,5 @@
-module HashMap where
+{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+module HashMap (HashMap(..),Dictionary (..)) where
 
 import Data.Array
 import Data.Hashable
@@ -12,7 +13,7 @@ data HashMap k v
         size :: Int -- Number of buckets
       }
   | Nil
-  deriving (Show)
+  deriving (Show,Eq)
 
 -- Helper functions
 bucketIndex :: (Hashable k) => HashMap k v -> k -> Int
