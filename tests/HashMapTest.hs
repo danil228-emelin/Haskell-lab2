@@ -2,7 +2,6 @@ module Main where
 import HashMap
 import Test.HUnit
 import qualified System.Exit as Exit
--- mapD remake, eq on Dict, empty Key,getAllKeys sort keys before return, check all methods when work with null or empty list
 test1 :: Test
 test1 = TestCase (assertEqual "check work of len func" 2 (len (createMap 2 [("A",1),("B",2),("C",3)]:: HashMap String Int)))
 
