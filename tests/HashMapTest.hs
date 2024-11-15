@@ -6,7 +6,7 @@ import qualified System.Exit as Exit
 test1 :: Test
 test1 = TestCase (assertEqual "check work of len func" 2 (len (createMap 2 [("A",1),("B",2),("C",3)]:: HashMap String Int)))
 
-test2 = TestCase (assertEqual "check work of empty func" Nil ( (empty (-4)::HashMap String Int)))
+test2 = TestCase (assertEqual "check work of empty func" Nil (empty (-4)::HashMap String Int))
 
 test3 = TestCase (assertEqual "check work of insert func" (createMap 2 [("A",1),("B",2)]) (insert "B" 2 (createMap 2 [("A",1)]:: HashMap String Int)))
 
@@ -32,9 +32,9 @@ test13= TestCase (assertEqual "check work of mapD func" (createMap 2 [("A",1),("
 
 test14= TestCase (assertEqual "check work of filterDK func" (createMap 2  [("A",1),("ABB",2)]) (filterDK (\(x,y)->head x == 'A') (createMap 2 [("A",1),("ABB",2),("CDF",31)]:: HashMap String Int)))
 
-test15= TestCase (assertEqual "check work of getAllKeys func" (["ABB","CDF","A"]) (getAllKeys (createMap 2 [("A",1),("CDF",31),("ABB",2)]:: HashMap String Int)))
+test15= TestCase (assertEqual "check work of getAllKeys func" (["A","ABB","CDF"]) (getAllKeys (createMap 2 [("A",1),("CDF",31),("ABB",2)]:: HashMap String Int)))
 
-test16= TestCase (assertEqual "check work of getAllValues func" ([2,31,1]) (getAllValues (createMap 2 [("A",1),("CDF",31),("ABB",2)]:: HashMap String Int)))
+test16= TestCase (assertEqual "check work of getAllValues func" ([1,2,31]) (getAllValues (createMap 2 [("A",1),("CDF",31),("ABB",2)]:: HashMap String Int)))
 
 
 tests :: Test

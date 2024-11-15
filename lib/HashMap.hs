@@ -1,11 +1,15 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
-module HashMap (HashMap(..),Dictionary (..)) where
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
+module HashMap (HashMap (..), Dictionary (..)) where
 
 import Data.Array
 import Data.Hashable
-import Data.List (find)
+import Data.List (find, sortOn)
+import Data.Maybe (fromMaybe)
 import Dictionary (Dictionary (..))
 import Functions (customFilter, customFoldl, customFoldr, customMap)
+import Test.QuickCheck
 
 data HashMap k v
   = HashMap
@@ -13,7 +17,7 @@ data HashMap k v
         size :: Int -- Number of buckets
       }
   | Nil
-  deriving (Show,Eq)
+  deriving (Show, Eq)
 
 -- Helper functions
 bucketIndex :: (Hashable k) => HashMap k v -> k -> Int
@@ -22,7 +26,7 @@ bucketIndex hashmap key = hash key `mod` size hashmap
 lookupHelper :: (Eq k, Eq v) => k -> [(k, v)] -> Maybe v
 lookupHelper key = customFoldr (\(k, v) acc -> if k == key then Just v else acc) Nothing
 
-instance (Hashable k, Eq v) => Dictionary HashMap k v where
+instance (Hashable k, Ord k, Ord v) => Dictionary HashMap k v where
   empty s
     | s >= 0 = HashMap (array (0, s) [(i, []) | i <- [0 .. s]]) s
     | otherwise = Nil
@@ -30,7 +34,7 @@ instance (Hashable k, Eq v) => Dictionary HashMap k v where
   insert key value hashmap =
     let index = bucketIndex hashmap key
         oldBucket = buckets hashmap ! index
-        newBucket = (key, value) : customFilter (\(k, _) -> k /= key) oldBucket
+        newBucket = sortOn fst ((key, value) : customFilter (\(k, _) -> k /= key) oldBucket)
         newBuckets = buckets hashmap // [(index, newBucket)]
      in hashmap {buckets = newBuckets}
   lookup _ Nil = Nothing
@@ -85,5 +89,10 @@ instance (Hashable k, Eq v) => Dictionary HashMap k v where
   (++) Nil hashMap = hashMap
   (++) hashMap Nil = hashMap
   (++) hashMap hashMap2 =
-    let commonElems = [(k, v) | xs <- elems (buckets hashMap), (k, v) <- xs, isKeyExist k hashMap2]
-     in createMap (size hashMap) commonElems
+    let commonElems = [(k, min v (fromMaybe v (Dictionary.lookup k hashMap2))) | xs <- elems (buckets hashMap), (k, v) <- xs, isKeyExist k hashMap2]
+     in createMap (length commonElems) commonElems
+
+instance Arbitrary (HashMap String Int) where
+  arbitrary = do
+    amount <- choose (1, 10)
+    return (createMap amount ([(show i, i) | i <- [0 .. amount]])) :: Gen (HashMap String Int)

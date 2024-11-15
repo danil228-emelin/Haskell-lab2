@@ -1,4 +1,6 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module Dictionary where
 
 -- Define the Dictionary class (interface) with a class constraint on keys
@@ -16,4 +18,4 @@ class (Eq k, Eq v) => Dictionary hm k v where
   isEmpty :: hm k v -> Bool -- Check if HashMap buckets are empty
   getAllKeys :: hm k v -> [k] -- Return all keys from map
   getAllValues :: hm k v -> [v] -- Return all values from map
-  (++) :: hm k v -> hm k v -> hm k v  -- intersects two dictionaries
+  (++) :: hm k v -> hm k v -> hm k v -- intersects two dictionaries

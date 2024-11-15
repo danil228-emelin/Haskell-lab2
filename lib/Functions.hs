@@ -1,6 +1,5 @@
 module Functions where
 
-
 customFoldr :: (a -> b -> b) -> b -> [a] -> b
 customFoldr _ v [] = v
 customFoldr f v (x : xs) = f x (customFoldr f v xs)
